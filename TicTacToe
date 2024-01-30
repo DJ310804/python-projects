@@ -1,0 +1,137 @@
+from IPython.display import clear_output
+
+# Function to display the Tic Tac Toe board
+def display_board(board):
+    print(f"{board[0]}  |  {board[1]}  |  {board[2]}")
+    print("___|_____|___")
+    print(f"{board[3]}  |  {board[4]}  |  {board[5]}")
+    print("___|_____|___")
+    print(f"{board[6]}  |  {board[7]}  |  {board[8]}")
+    print("   |     |  ")
+
+# Function to take player input (X or O)
+def player_input():
+    x = " "
+    while x != 'x' and x != 'o':
+        x = input("What do you want to choose: x/o")
+        if x != 'o' and x != 'x':
+            clear_output()
+            print("Invalid input, please enter x or o.")
+        else:
+            print(f"Player 1 chose: {x}")
+
+# Function to place a marker (X or O) on the board at a given position
+def place_marker(board, marker, position):
+    board[position] = marker
+
+# Function to check if a player has won
+def win_check(board, mark):
+    if (
+        board[0] == board[1] == board[2] == mark or
+        board[3] == board[4] == board[5] == mark or
+        board[8] == board[7] == board[6] == mark or
+        board[0] == board[3] == board[6] == mark or
+        board[1] == board[4] == board[7] == mark or
+        board[2] == board[5] == board[8] == mark or
+        board[0] == board[4] == board[8] == mark or
+        board[2] == board[4] == board[6] == mark
+    ):
+        return True
+    else:
+        return False
+
+# Function to check if a space on the board is empty
+def space_check(board, position):
+    if board[int(position)].isdigit() == True:
+        return True
+    else:
+        return False
+
+# Function to check if the board is full
+def full_board_check(board):
+    for i in board:
+        if i.isdigit() == True:
+            return False
+    else:
+        return True
+
+# Function for the player to choose a position on the board
+def player_choice(board):
+    f = 0
+    while f == 0:
+        x = input("Choose your position:")
+        if x.isdigit() == False:
+            print("Invalid input, please choose a number between 0-9.")
+            continue
+        else:
+            if space_check(board, x):
+                f = 1
+            else:
+                print("Position is already filled, choose an empty one.")
+    return int(x)
+
+# Function to ask if the players want to play again
+def replay():
+    a = "yes"
+    while a == 'yes':
+        a = input("Do you want to play this game? (yes/no)")
+        if a == 'no':
+            return False
+        elif a == 'yes':
+            return True
+        else:
+            print("Invalid input, please enter yes or no.")
+            a = 'yes'
+
+# Main game loop
+print('Welcome to Tic Tac Toe!')
+
+while True:
+    # Set up the game
+    board = ['0', '1', '2', '3', '4', '5', '6', '7', '8']
+    display_board(board)
+
+    x = player_input()
+    p = choose_first()
+    if p == 1:
+        x = 'x'
+        print("1st chance is given to x")
+    else:
+        x = 'o'
+        print("1st chance is given to o")
+
+    while not full_board_check(board):
+        # Player 1 Turn
+        p = player_choice(board)
+        place_marker(board, x, p)
+        display_board(board)
+        if win_check(board, x):
+            print(f"{x} won the game")
+            break
+        if x == 'x':
+            x = 'o'
+        else:
+            x = 'x'
+
+        if full_board_check(board):
+            print("Board is full, no one won")
+            break
+
+        # Player 2's turn
+        p = player_choice(board)
+        place_marker(board, x, p)
+        display_board(board)
+        if win_check(board, x):
+            print(f"{x} won the game")
+            break
+        if x == 'x':
+            x = 'o'
+        else:
+            x = 'x'
+
+        if full_board_check(board):
+            print("Board is full, no one won")
+            break
+
+    if not replay():
+        break
